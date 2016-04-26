@@ -5,7 +5,7 @@ This app provide all of the Wifi password in YU
 The password is provided by SSC (Student Service Center)
 Password can change without warning
 
-This is the cative version
+This is the active version
 
 Created at January 2016
 Developed by 
