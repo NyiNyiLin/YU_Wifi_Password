@@ -67,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
         //Create New emptylist to show when wifi is closed
         emptyList.add(new Wifi("Wifi is closed", "Not Available"));
 
-
-
         //This is to check wifi status
         sync_wifi();
 
@@ -80,14 +78,11 @@ public class MainActivity extends AppCompatActivity {
                 //To open or close Wifi
                 wifiManager.setWifiEnabled(isChecked);
 
-
                 wifi_Is_open = isChecked;
                 if (wifi_Is_open) {
-
                     //When wifi is opened, then assign all wifi list to adapter
                     show_wifi_list();
                 } else {
-
                     //This is to hide the adapter
                     setBlankAdapter();
                 }
@@ -114,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(int position, View v) {
                 Log.i("Recycler Adapter", " Clicked on Item " + position);
                 Wifi wifi = CardViewAdapter.getWifiArrayList().get(position);
-
 
                 //When user clicked wifi is Available, do connect function to connect and if not show Not in Range
                 if (wifi.getStatus().compareTo(mAvailable) == 0 || wifi.getStatus().compareTo("Connected") == 0) {
@@ -377,6 +371,7 @@ public class MainActivity extends AppCompatActivity {
             ConnectivityManager connManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
             NetworkInfo networkInfo1=connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            //connManager.getActiveNetworkInfo();
 
             //If wifi is opened, check wifi is connected or not
              if (networkInfo.isConnected()) {
