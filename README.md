@@ -7,7 +7,6 @@ Password can change without warning
 
 This version 1.0 has default wifi name and password.
 
-
 Created at January 2016
 Developed by 
 Nyi Nyi Lin
