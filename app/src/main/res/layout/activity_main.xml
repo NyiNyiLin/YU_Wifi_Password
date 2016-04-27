@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Wifi"
-        android:textSize="@dimen/text_size"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textOff="OFF"
         android:textOn="ON"
         app:showText="false"
@@ -36,7 +36,8 @@
         android:layout_height="wrap_content"
         android:text="Available YU Network"
         android:layout_above="@id/line"
-        android:textSize="20dp"/>
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
     <View
         android:id="@+id/btn_sync"
         android:layout_width="30dp"
@@ -46,12 +47,17 @@
         android:layout_marginRight="30dp"
         android:background="@drawable/icon_syno"/>
 
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/line"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"
-        android:layout_below="@id/line"
+        android:layout_below="@id/listview"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         />
-
 
 </RelativeLayout>

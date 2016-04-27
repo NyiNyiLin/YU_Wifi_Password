@@ -21,9 +21,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.nyi.yuwifipassword.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
     CardViewAdapter mCardViewAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    ArrayList<Wifi> mDefault_Firebasse_Wifi_List = new ArrayList<>();
+    MyListViewAdapter myListViewAdapter;
+
     final boolean[] isConnect = {false};
 
     @Override
@@ -51,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setDafultWifiList();
+
+        //uploadWifiData();
+
 
         //Declaration
         textView = (TextView) findViewById(R.id.text);
@@ -66,6 +80,12 @@ public class MainActivity extends AppCompatActivity {
 
         //Create New emptylist to show when wifi is closed
         emptyList.add(new Wifi("Wifi is closed", "Not Available"));
+
+        //This is for listview
+        ListView listView = (ListView) findViewById(R.id.listview);
+        myListViewAdapter = new MyListViewAdapter(this, R.layout.list_view_row, emptyList);
+        listView.setAdapter(myListViewAdapter);
+        getDataFromFirebase();
 
         //This is to check wifi status
         sync_wifi();
@@ -401,4 +421,51 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).show();
     }
+    /*
+    Upload default data to Firebase
+     */
+    private void uploadWifiData(){
+        for(Wifi wifi : mDefault_Wifi_List){
+            new Firebase(Constants.WIFI_DATA_URL)
+                    .push()
+                    .setValue(wifi);
+        }
+        Toast.makeText(YUWifiPassword.getContext(), "Finished uploading data", Toast.LENGTH_SHORT).show();
+    }
+    /*
+    Get data from firebase
+     */
+    private void getDataFromFirebase(){
+        new Firebase(Constants.WIFI_DATA_URL)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        Wifi wifi = new Wifi ((String) dataSnapshot.child("ssid").getValue());
+                        mDefault_Firebasse_Wifi_List.add(wifi);
+                        myListViewAdapter.add(wifi);
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+    }
+
+
 }

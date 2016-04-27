@@ -8,6 +8,10 @@ public class Wifi {
     private String status;
     private  String password;
 
+    public Wifi(String SSID) {
+        this.SSID = SSID;
+    }
+
     public Wifi(String SSID, String status) {
         this.SSID = SSID;
         this.status = status;
@@ -18,7 +22,6 @@ public class Wifi {
     }
 
     public Wifi(String SSID, String status, String password) {
-
         this.SSID = SSID;
         this.status = status;
         this.password = password;

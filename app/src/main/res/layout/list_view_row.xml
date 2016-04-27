@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardview_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/card_linear"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="2"
+        >
+        <TextView
+            android:id="@+id/label_SSID_in_listVieww"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="label"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:textColor="@color/colorPrimary"
+            />
+
+        <TextView
+            android:id="@+id/label_status_in_listView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="label"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+    </LinearLayout>
+    <View
+        android:id="@+id/view_in_listView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        />
+</RelativeLayout>
