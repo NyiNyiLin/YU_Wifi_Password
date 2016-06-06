@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">YU Wifi Key</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="download_data">There is no internet connection.  Application require internet connection to download and update data.</string>
 </resources>

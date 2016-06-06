@@ -3,7 +3,8 @@ package com.nyi.yuwifipassword;
 import android.app.Application;
 import android.content.Context;
 
-import com.firebase.client.Firebase;
+import com.google.firebase.database.FirebaseDatabase;
+
 
 /**
  * Created by IN-3442 on 27-Apr-16.
@@ -14,7 +15,7 @@ public class YUWifiPassword extends Application {
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
-        Firebase.setAndroidContext(this);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
     public static Context getContext() {

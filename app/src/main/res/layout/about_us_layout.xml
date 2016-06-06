@@ -9,8 +9,8 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/yu_wifi_key"
-        android:layout_gravity="center_horizontal"
+        android:src="@drawable/icon_256"
+        android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"/>
     <TextView

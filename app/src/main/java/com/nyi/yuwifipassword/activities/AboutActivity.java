@@ -1,4 +1,4 @@
-package com.nyi.yuwifipassword;
+package com.nyi.yuwifipassword.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.nyi.yuwifipassword.R;
 
 /**
  * Created by IN-3442 on 19-Jan-16.
