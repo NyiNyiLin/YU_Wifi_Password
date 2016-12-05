@@ -35,14 +35,6 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.nyi.yuwifipassword.Adapter.MyListViewAdapter;
 import com.nyi.yuwifipassword.Manifest;
 import com.nyi.yuwifipassword.R;
@@ -52,8 +44,6 @@ import com.nyi.yuwifipassword.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -89,10 +79,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
         //This is to check wifi status
-        sync_wifi();
+        //sync_wifi();
         emptyList.add(new Wifi("Wifi is turned off",Constants.NOT_AVAILABLE));
-
-
     }
 
     @Override
@@ -113,8 +101,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Wifi wifi = mDefault_Firebasse_Wifi_List.get(position);
-                OpenInputDialogBox(wifi.getSsid(), wifi.getPassword(), "Connect");
+                OpenInputDialogBox(wifi.getSsid(), wifi.getStatus(), wifi.getPassword(), "Connect");
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Wifi wifi = mDefault_Firebasse_Wifi_List.get(position);
                 Toast.makeText(getApplicationContext(), wifi.getPassword(), Toast.LENGTH_LONG).show();
+                return true;
             }
         });
 
@@ -156,18 +151,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         super.onResume();
         //registerReceiver(myNetworkMonitor, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         sync_wifi();
-
-        //When this activity is running again, show snackbar to synchronize but need to check wifi open or not
-        if (wifiManager.isWifiEnabled()) showSnackbar();
     }
 
     protected void onPause() {
         if(isRegister){
             unregisterReceiver(myNetworkMonitor);
+            Log.i(LOG_TAG, "Unregister receiver");
             isRegister = false;
         }
         super.onPause();
     }
+
     /*
     To create things on tool bar
      */
@@ -183,14 +177,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.sync) {
-            //Synchronize again
-            sync_wifi();
-        } else if (id == R.id.about) {
+        if (id == R.id.about) {
             //Switch to About Activity
             Intent in = new Intent(this, AboutActivity.class);
             startActivity(in);
-        } else if(id == R.id.update){
+        } else if(id == R.id.sync){
             Intent intent = new Intent(YUWifiPassword.getContext(), WelcomeActivity.class);
             intent.putExtra(Constants.UPDATE,true);
             startActivity(intent);
@@ -208,9 +199,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         sync_wifi();
         swipeRefreshLayout.setRefreshing(false);
     }
+
     /*
-           This is the helper function to syn the wifi status
-        */
+        This is the helper function to syn the wifi status
+     */
     private void sync_wifi() {
         //If wifi is opened, show all wifi list and if not, set blank adapter P.S- set Switch Compact icon 'on' or 'off'
         if (wifiManager.isWifiEnabled()) {
@@ -231,15 +223,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         if(myNetworkMonitor == null){
             myNetworkMonitor = new MyNetworkMonitor();
         }
-        registerReceiver(myNetworkMonitor, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        isRegister = true;
+        if(!isRegister) {
+            registerReceiver(myNetworkMonitor, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+            Log.i(LOG_TAG, "Register receiver");
+            isRegister = true;
+        }
         wifiManager.startScan();
 
         //Then set the listview onClicklistener enable
         listView.setEnabled(true);
     }
-
-
 
     /*
     This is the helper function to connect wifi
@@ -274,13 +267,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 wifiManager.disconnect();
                 wifiManager.enableNetwork(in.networkId, true);
                 wifiManager.reconnect();
-                Log.i("Connecting", "Connect Wifi");
+                Log.i("Wifi", "Connect Wifi");
                 break;
             }
         }
     }
-
-
 
     /*
     This is the helper function to set the wifi adapter empty
@@ -293,13 +284,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         Log.i(LOG_TAG, "De a hti");
         if(isRegister){
             unregisterReceiver(myNetworkMonitor);
+            Log.i(LOG_TAG, "Unregister receiver");
             isRegister = false;
         }
 
     }
 
-
-    public void OpenInputDialogBox(String title, String text,String buttonText) {
+    public void OpenInputDialogBox(final String ssid, String status, final String password, String buttonText) {
         LayoutInflater layoutInflater = LayoutInflater.from(YUWifiPassword.getContext());
         View promptView = layoutInflater.inflate(R.layout.pop_up_info_layout, null);
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -308,21 +299,26 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         final TextView popup_main_text1 = (TextView) promptView.findViewById(R.id.pop_up_main_text1);
         final TextView popup_main_text2 = (TextView) promptView.findViewById(R.id.pop_up_main_text2);
-//        alert.setTitle(title);
-//        alert.setMessage(text);
-        popup_main_text1.setText(title);
-        popup_main_text2.setText(text);
+        popup_main_text1.setText(ssid);
+        popup_main_text2.setText(status);
+        if(status.compareTo(Constants.AVAILABLE) == 0){
+            alert.setPositiveButton("Connect", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    //Then connect to given network
+                    connect(ssid, password);
+                }
+            });
+        }else{
+            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
 
+                }
+            });
+        }
 
-        alert.setPositiveButton(buttonText, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-
-            }
-        });
         // create an alert dialog
         AlertDialog alert1 = alert.create();
         alert1.show();
-
     }
 
     /*
@@ -354,10 +350,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
         return ssid;
     }
+/*
 
-    /*
+    */
+/*
     For Snackbar
-     */
+     *//*
+
     private void showSnackbar() {
         Snackbar.make(findViewById(R.id.listview), "Synchronize wifi again", Snackbar.LENGTH_LONG).setAction("SYNC", new
                 View.OnClickListener() {
@@ -367,9 +366,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     }
                 }).show();
     }
+*/
 
     public static class MyNetworkMonitor extends BroadcastReceiver {
-        Context mContext;
 
         public MyNetworkMonitor() {
 
@@ -380,9 +379,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
          */
         @Override
         public void onReceive(Context context, Intent intent) {
-            mContext = context;
             // Process the Intent here
-            Toast.makeText(mContext,"Wifi status changed",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext,"Wifi status changed",Toast.LENGTH_SHORT).show();
+            Log.i("Wifi", "onReceive");
             show_wifi_list();
         }
 
@@ -390,9 +389,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         To show all wifi list
          */
         public void show_wifi_list() {
+            WifiManager wifiManager = (WifiManager) YUWifiPassword.getContext().getSystemService(Context.WIFI_SERVICE);
             //Firstly assign all wifi status to Not in Range
             setAllWifiNotInRange();
-            Manifest manifest = new Manifest();
             List<android.net.wifi.ScanResult> mScanResults = wifiManager.getScanResults();
             int temp_position = 0;
 
@@ -438,8 +437,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     Assign wifi List to listview
      */
         public void assignWifiListToListview(){
-            myListViewAdapter = new MyListViewAdapter(mContext, R.layout.list_view_row, mDefault_Firebasse_Wifi_List);
-            listView.setAdapter(myListViewAdapter);
+            myListViewAdapter = new MyListViewAdapter(YUWifiPassword.getContext(), R.layout.list_view_row, mDefault_Firebasse_Wifi_List);
+            //myListViewAdapter.clear();
+            //myListViewAdapter.addAll(mDefault_Firebasse_Wifi_List);
+            if(listView != null ) listView.setAdapter(myListViewAdapter);
             Log.i("Wifi","Assign Adapter");
         }
     }

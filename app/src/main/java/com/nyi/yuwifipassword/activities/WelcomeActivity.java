@@ -172,6 +172,7 @@ public class WelcomeActivity extends AppCompatActivity {
         //If not, check quantity
         mIsFirst = sp.getBoolean(Constants.FIRST_TIME,false);
         if(!mIsFirst){
+            mFirebasse_Wifi_List.clear();
             checkInternet();
         }else{
             checkQuantity();
@@ -234,10 +235,17 @@ public class WelcomeActivity extends AppCompatActivity {
      */
     private void checkQuantity(){
         Log.i(LOG_TAG,"check quantity");
+
+
+
         mDataRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 mDataQuantity = dataSnapshot.getChildrenCount();
+
+                //for sync with online data
+                mPassRef.keepSynced(true);
+
                 getDataFromFirebase();
                 delayer();
             }

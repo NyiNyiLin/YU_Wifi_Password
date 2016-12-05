@@ -18,6 +18,12 @@ public class YUWifiPassword extends Application {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        context = null;
+    }
+
     public static Context getContext() {
         return context;
     }

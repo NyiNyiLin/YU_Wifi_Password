@@ -34,7 +34,7 @@ public class AboutActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("message/rfc822");
-                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{  "nyinyilinyu@gmail.com"});
+                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{  "nyinyilin.dev@gmail.com"});
                 i.putExtra(Intent.EXTRA_SUBJECT, "YU Wifi Key");
                 //i.putExtra(Intent.EXTRA_TEXT   , "Testing");
                 try {

@@ -28,7 +28,8 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="label"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#000"/>
 
     </LinearLayout>
     <View

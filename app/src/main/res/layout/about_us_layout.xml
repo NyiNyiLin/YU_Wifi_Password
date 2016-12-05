@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="version 1.0"
+        android:text="version 2.0"
         android:textSize="20dp"
         android:textColor="@color/colorPrimary"
         android:layout_gravity="center_horizontal"
@@ -34,15 +34,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:textSize="20dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Passwords are provided by the Student Service Center."/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:textSize="20dp"
-        android:text="As soon as you hear that Wifi passwords are changed, "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Feel free to send feebback to"
         />
     <TextView
         android:id="@+id/contact_me"
@@ -50,21 +50,12 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="20dp"
-        android:textSize="22dp"
-        android:text="please contact me"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="nyinyilin.dev@gmail.com"
         android:textStyle="italic"
         android:textColor="#2196f3"
         />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:text="Developed by Nyi Nyi Lin (CS)"
-        android:textStyle="bold"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        />
     </LinearLayout>
 
     <TextView
@@ -72,7 +63,7 @@
         android:layout_height="wrap_content"
         android:text="*Only For YU Students*"
         android:textStyle="bold"
-        android:textSize="20dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="50dp"
         android:layout_marginBottom="10dp"
